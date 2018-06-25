@@ -16,3 +16,4 @@ events.*
 *.zip
 *.mat
 /ops_logs/
+readme.txt

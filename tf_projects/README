@@ -1,0 +1,7 @@
+Things need to solve: For Tensorflow Estimator
+    1. how tuning tensorflow hyperparameter?
+    2. How to predict by checkpoints?
+        set specific chenpoint file to checkpoints parameter
+        e.g.train_pred_results = model.predict(input_fn=train_pred_input_fn,checkpoint_path='./model.ckpt-18400')
+    3. How to show loss curve for both training and developing set at the same time?
+    

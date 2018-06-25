@@ -1,6 +1,11 @@
 .vscode
 /__pycache/
 /models/
+/ops_logs/
+/imfs/
+/PACFs/
+/Tech/
+/ml_fp_lytm_Baby/
 model.*
 graph.*
 checkpoint
@@ -15,5 +20,4 @@ events.*
 *.rar
 *.zip
 *.mat
-/ops_logs/
 readme.txt

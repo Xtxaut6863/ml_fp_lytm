@@ -32,7 +32,7 @@ def csv_gen_sample(
 
     # Get the training and developing set
     # train_dev_set = full_norm_set[0:train_dev_len]
-    train_dev_set = full_norm_set[0:(series_len - 541)]
+    train_dev_set = full_norm_set[0:(series_len - test_size)]
 
     # Get the test set
     # Shuffle the data

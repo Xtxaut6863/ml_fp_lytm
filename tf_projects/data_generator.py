@@ -25,7 +25,8 @@ def gen_data(
     seed=None,
     sampling=True):
     """ 
-    Generate learning data for autoregression problem 
+    Generate learning data for autoregression problem. 
+    This program could generate source CSV fflie for .tfrecords file generating. 
     Args:
         -path: The sourcve data file path for generate the learning data.
         -columns: the columns name for read the source data by pandas.
@@ -43,19 +44,23 @@ def gen_data(
     dataframe = pd.read_excel(path)[columns]
     dataframe.dropna()
     nparr = np.array(dataframe)
-    label = pd.DataFrame(nparr[lags:], columns=['Y'])['Y']
-    full_data_set = label
+    full_data_set = pd.DataFrame()
     for i in range(lags):
         x = pd.DataFrame(nparr[i:dataframe.size - (lags - i)],columns=['X' + str(i + 1)])['X' + str(i + 1)]
         full_data_set = pd.DataFrame(pd.concat([full_data_set, x], axis=1))
 
+    label = pd.DataFrame(nparr[lags:], columns=['Y'])['Y']
+    full_data_set = pd.DataFrame(pd.concat([full_data_set, label], axis=1))
     # Get the max and min value of each series
     serise_max = full_data_set.max()
     series_min = full_data_set.min()
 
+    print(series_min)
+    print(serise_max)
     # NOrmalize each series to the range between -1 and 1
-    full_norm_set = 2 * (full_data_set - series_min) / (serise_max - series_min) - 1
+    # full_norm_set = 2 * (full_data_set - series_min) / (serise_max - series_min) - 1
 
+    full_norm_set = full_data_set
     # Get the length of this series
     series_len = len(full_norm_set)
 
@@ -93,4 +98,5 @@ if __name__ == '__main__':
         dev_csv='Test_dev.csv',
         test_csv='Test_test.csv',
         test_len=2,
+        sampling=False
         )

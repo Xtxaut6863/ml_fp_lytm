@@ -24,7 +24,7 @@ from sklearn.metrics import r2_score
 def my_dnn_regression_fn(features, labels, mode, params):
     """ A model function implementing DNN regression for a custom Estimator """
 
-    # Extract the input intp  a dense layer, according to feature_columns.
+    # Extract the input into a dense layer, according to feature_columns.
     with tf.name_scope("feature_columns"):
         top = tf.feature_column.input_layer(features,params['feature_columns'])
 
@@ -33,8 +33,7 @@ def my_dnn_regression_fn(features, labels, mode, params):
         # Add a hidden layer, densely connected on top of previous layer.
         # Set dropout rate for each hidden layer, default is 0.0; no dropout
         for drop in params.get('drop_rates', [0.0]):
-            top = tf.layers.dense(
-                inputs=top, units=units, activation=tf.nn.relu)
+            top = tf.layers.dense(inputs=top, units=units, activation=tf.nn.relu)
             top = tf.layers.dropout(top, rate=drop)
 
     # Connect a liner output layer on top.
@@ -373,72 +372,6 @@ def get_wide_deep_columns():
     wide_feature_columns = categorical_columns + sparse_columns
 
     return wide_feature_columns, deep_feature_columns
-
-
-def rnn_model_fn(features, labels, mode, params):
-
-    # 0. Reformat input shape to become a sequence
-    inputs = tf.split(features[VALUES_FEATURE_NAME], INPUT_SEQUENCE_LENGTH, 1)
-    print('inputs={}'.format(inputs))
-
-    # 1. configure the RNN
-    lstm_cell = rnn.BasicLSTMCell(
-        num_units=params.hidden_units,
-        forget_bias=params.forget_bias,
-        activation=tf.nn.tanh)
-
-    outputs, _ = rnn.static_rnn(
-        cell=lstm_cell, inputs=inputs, dtype=tf.float32)
-
-    # slice to keep only the last cell of the RNN
-    outputs = outputs[-1]
-    print('last outputs={}'.format(outputs))
-
-    # output is result of linear activation of last layer of RNN
-    #     weight = tf.Variable(tf.random_normal([LSTM_SIZE, N_OUTPUTS]))
-    #     bias = tf.Variable(tf.random_normal([N_OUTPUTS]))
-    #     predictions = tf.matmul(outputs, weight) + bias
-
-    predictions = tf.layers.dense(
-        inputs=outputs, units=OUTPUT_SEQUENCE_LENGTH, activation=None)
-
-    predict_output = {'values': predictions}
-
-    if mode == tf.estimator.ModeKeys.PREDICT:
-
-        export_outputs = {
-            'predictions': tf.estimator.export.PredictOutput(predict_output)
-        }
-
-        return tf.estimator.EstimatorSpec(
-            mode=mode,
-            predictions=predict_output,
-            export_outputs=export_outputs)
-
-    # Calculate loss using mean squared error
-    loss = tf.losses.mean_squared_error(labels, predictions)
-
-    # Create Optimiser
-    optimizer = tf.train.AdamOptimizer(learning_rate=params.learning_rate)
-
-    # Create training operation
-    train_op = optimizer.minimize(
-        loss=loss, global_step=tf.train.get_global_step())
-
-    # Calculate root mean squared error as additional eval metric
-    eval_metric_ops = {
-        "rmse": tf.metrics.root_mean_squared_error(labels, predictions),
-        "mae": tf.metrics.mean_absolute_error(labels, predictions)
-    }
-
-    # Provide an estimator spec for `ModeKeys.EVAL` and `ModeKeys.TRAIN` modes.
-    estimator_spec = tf.estimator.EstimatorSpec(
-        mode=mode,
-        loss=loss,
-        train_op=train_op,
-        eval_metric_ops=eval_metric_ops)
-
-    return estimator_spec
 
 
 def main(argv):

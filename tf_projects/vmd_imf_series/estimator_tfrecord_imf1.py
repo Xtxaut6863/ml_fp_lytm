@@ -317,7 +317,7 @@ def main(argv):
         keep_checkpoint_max=2000  #Retain the 50most recent checkpoints
     )
     for learning_rate in [0.01]:
-        hidden_units = [6,7]  #3:12
+        hidden_units = [7,4]  #3:12
         hparam_str = 'DNNRegressor_Hidden_Units'+str(hidden_units)
 
         # Set the models path.

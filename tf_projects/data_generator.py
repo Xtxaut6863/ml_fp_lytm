@@ -58,9 +58,9 @@ def gen_data(
     print(series_min)
     print(serise_max)
     # NOrmalize each series to the range between -1 and 1
-    # full_norm_set = 2 * (full_data_set - series_min) / (serise_max - series_min) - 1
+    full_norm_set = 2 * (full_data_set - series_min) / (serise_max - series_min) - 1
 
-    full_norm_set = full_data_set
+    # full_norm_set = full_data_set
     # Get the length of this series
     series_len = len(full_norm_set)
 

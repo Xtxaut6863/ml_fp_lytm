@@ -6,8 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 import tensorflow as tf
 import numpy as np
-sys.path.append(
-    'F:/ml_fp_lytm/tf_projects/test/')
+sys.path.append('F:/ml_fp_lytm/tf_projects/test/')
 from load_data import load_normalized_data
 from plot_util import plot_normreconvert_relation
 from plot_util import plot_normreconvert_pred

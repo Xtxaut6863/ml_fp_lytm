@@ -332,7 +332,7 @@ def main(argv):
             )
 
         STEPS = 100
-        for i in range(50):
+        for i in range(100):
             # Train the model
             model.train(input_fn=train_input_fn, steps=STEPS)
             # Evaluate how the model performs on a data it has not yet seen.

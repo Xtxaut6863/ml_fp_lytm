@@ -28,10 +28,10 @@ def main(argv):
     (x_train_dev, y_train_dev), (x_train0, y_train0), (x_dev0, y_dev0), (
         x_test0, y_test0), (series_max, series_min) = load_normalized_data(
             'VMD_IMFS.xlsx', seed=123)
-    data_file = 'ARMA_IMFs_PRED.xlsx'
     # data_file = 'ARMA_IMFs_PRED.xlsx'
+    # data_file = 'SVR_IMFs_PRED.xlsx'
     # data_file = 'GBR_IMFs_PRED.xlsx'
-    # data_file = 'DNN_IMFs_PRED.xlsx'
+    data_file = 'DNN_IMFs_PRED.xlsx'
     # print(10 * '-' + ' Data file: {}'.format(data_file))
     # # laod data from local disk.
     # (x_train_dev, y_train_dev), (x_train, y_train), (x_dev, y_dev), (

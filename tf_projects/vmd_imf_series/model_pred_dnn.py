@@ -25,20 +25,22 @@ def main(argv):
     # laod data from local disk.
     (x_train_dev, y_train_dev), (x_train, y_train), (x_dev, y_dev), (
         x_test, y_test), (series_max, series_min) = load_normalized_data(
-            "VMD_IMFS.xlsx", seed=123)
+            # "orig_day_full_X.xlsx", # Do original prediction
+            "vmd_imf10.xlsx", # Do vmd IMFs prediction
+             seed=123)
 
     # create feature colums
     feature_columns = [
         tf.feature_column.numeric_column("X1"),
         tf.feature_column.numeric_column("X2"),
         tf.feature_column.numeric_column("X3"),
-        tf.feature_column.numeric_column("X4"),
-        tf.feature_column.numeric_column("X5"),
-        tf.feature_column.numeric_column("X6"),
-        tf.feature_column.numeric_column("X7"),
-        tf.feature_column.numeric_column("X8"),
-        tf.feature_column.numeric_column("X9"),
-        tf.feature_column.numeric_column("X10"),
+        # tf.feature_column.numeric_column("X4"),
+        # tf.feature_column.numeric_column("X5"),
+        # tf.feature_column.numeric_column("X6"),
+        # tf.feature_column.numeric_column("X7"),
+        # tf.feature_column.numeric_column("X8"),
+        # tf.feature_column.numeric_column("X9"),
+        # tf.feature_column.numeric_column("X10"),
         # tf.feature_column.numeric_column("X11"),
         # tf.feature_column.numeric_column("X12"),
         # tf.feature_column.numeric_column("X13"),
@@ -51,8 +53,19 @@ def main(argv):
     ]
 
     # recovery the model, and set the dropout rate to 0.0
-    model_path = current_path + '/models/ensemble/'
-    current_model = 'DNNRegressor_Hidden_Units[9, 8]'
+    model_path = current_path + '/models/imf10/'
+
+    # current_model = 'DNNRegressor_Hidden_Units[7, 13]'  # orig
+    # current_model = 'DNNRegressor_Hidden_Units[5, 8]'  # imf1
+    # current_model = 'DNNRegressor_Hidden_Units[3]'  # imf2
+    # current_model = 'DNNRegressor_Hidden_Units[9, 12]'  # imf3
+    # current_model = 'DNNRegressor_Hidden_Units[6, 10]'  # imf4
+    # current_model = 'DNNRegressor_Hidden_Units[5, 11]'  # imf5
+    # current_model = 'DNNRegressor_Hidden_Units[4, 7]'  # imf6
+    # current_model = 'DNNRegressor_Hidden_Units[11, 12]'  # imf7
+    # current_model = 'DNNRegressor_Hidden_Units[4]'  # imf8
+    # current_model = 'DNNRegressor_Hidden_Units[13, 12]'  # imf9
+    current_model = 'DNNRegressor_Hidden_Units[3]'  # imf10
     model_dir = model_path + current_model + '/'
 
     # model = tf.estimator.Estimator(
@@ -67,7 +80,16 @@ def main(argv):
     # )
 
     model = tf.estimator.DNNRegressor(
-        hidden_units=[9, 8],
+        # hidden_units=[7, 13], # orig
+        # hidden_units=[5, 8], # imf1
+        # hidden_units=[3], # imf2
+        # hidden_units=[9,12], # imf3
+        # hidden_units=[6,10], # imf4
+        # hidden_units=[5,11], # imf5
+        # hidden_units=[4], # imf6
+        # hidden_units=[11,12], # imf7
+        # hidden_units=[13,12], # imf9
+        hidden_units=[3], # imf10
         feature_columns=feature_columns,
         model_dir=model_dir,
     )
@@ -80,7 +102,17 @@ def main(argv):
         x_test, shuffle=False)
 
     # Use the specific file to predict
-    checkpoint_path = model_dir + 'model.ckpt-22400'
+    # checkpoint_path = model_dir + 'model.ckpt-7200' #orig
+    # checkpoint_path = model_dir + 'model.ckpt-29600' #imf1
+    # checkpoint_path = model_dir + 'model.ckpt-50600' #imf2
+    # checkpoint_path = model_dir + 'model.ckpt-74900' #imf3
+    # checkpoint_path = model_dir + 'model.ckpt-30000' #imf4
+    # checkpoint_path = model_dir + 'model.ckpt-73100' #imf5
+    # checkpoint_path = model_dir + 'model.ckpt-81700' #imf6
+    # checkpoint_path = model_dir + 'model.ckpt-13200' #imf7
+    # checkpoint_path = model_dir + 'model.ckpt-32800' #imf8
+    # checkpoint_path = model_dir + 'model.ckpt-11700' #imf9
+    checkpoint_path = model_dir + 'model.ckpt-45600' #imf10
 
     # predict the training set by specfic checkpoint
     train_pred_results = model.predict(
@@ -190,50 +222,7 @@ def main(argv):
         series_max,
         series_min,
         fig_savepath=model_path + current_model + "_test_pred.tif")
-    """ # plot the predicted litrain_predictions
-    plot_normreconvert_pred(
-        y_train,
-        train_predictions,
-        series_max,
-        series_min,
-        fig_savepath=model_path + current_model + '_train_pred.png')
 
-    plot_normreconvert_relation(
-        y_train,
-        train_predictions,
-        series_max,
-        series_min,
-        fig_savepath=model_path + current_model + "_train_rela.png")
-
-    plot_normreconvert_pred(
-        y_dev,
-        dev_predictions,
-        series_max,
-        series_min,
-        fig_savepath=model_path + current_model + "_dev_pred.png")
-
-    # plot the relationship between the records and predcitions
-    plot_normreconvert_relation(
-        y_dev,
-        dev_predictions,
-        series_max,
-        series_min,
-        fig_savepath=model_path + current_model + "_dev_rela.png")
-
-    plot_normreconvert_pred(
-        y_test,
-        test_predictions,
-        series_max,
-        series_min,
-        fig_savepath=model_path + current_model + "_test_pred.png")
-
-    # plot the relationship between the records and predcitions
-    plot_normreconvert_relation(
-        y_test,
-        test_predictions,
-        series_max,
-        series_min,
-        fig_savepath=model_path + current_model + "_test_rela.png") """
 
 
 if __name__ == '__main__':
